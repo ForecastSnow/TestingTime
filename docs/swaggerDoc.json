@@ -1,0 +1,579 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Mi API",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/users": {
+      "get": {
+        "summary": "Obtener todos los usuarios",
+        "tags": [
+          "Users"
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de usuarios",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "payload": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/User"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/{uid}": {
+      "get": {
+        "summary": "Obtener un usuario por ID",
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "uid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuario encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "payload": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "Faltar Error": {
+            "description": "El crack que hizo la api no uso ni try catch y no puede capturar ni manejar errores al ingresar mal un UID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Actualizar un usuario",
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "uid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuario actualizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User updated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "Faltar Error": {
+            "description": "El crack que hizo la api no uso ni try catch y no puede capturar ni manejar errores al ingresar mal un UID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Eliminar un usuario",
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "uid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuario eliminado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User deleted"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "Faltar Error": {
+            "description": "El crack que hizo la api no uso ni try catch y no puede capturar ni manejar errores al ingresar mal un UID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/pets": {
+      "get": {
+        "summary": "Obtener todas las mascotas",
+        "tags": [
+          "Pets"
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de mascotas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Pet"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Crear una nueva mascota",
+        "tags": [
+          "Pets"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mascota creada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pet"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/pets/withimage": {
+      "post": {
+        "summary": "Crear mascota con imagen",
+        "tags": [
+          "Pets"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "specie": {
+                    "type": "string"
+                  },
+                  "birthDate": {
+                    "type": "string",
+                    "format": "date"
+                  }
+                },
+                "required": [
+                  "name",
+                  "specie"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mascota creada con imagen",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pet"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/pets/{pid}": {
+      "put": {
+        "summary": "Actualizar mascota por ID",
+        "tags": [
+          "Pets"
+        ],
+        "parameters": [
+          {
+            "name": "pid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mascota actualizada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pet"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Eliminar mascota por ID",
+        "tags": [
+          "Pets"
+        ],
+        "parameters": [
+          {
+            "name": "pid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mascota eliminada"
+          }
+        }
+      }
+    },
+    "/api/adoptions": {
+      "get": {
+        "summary": "Obtener todas las adopciones",
+        "tags": [
+          "Adoptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de adopciones",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Adoption"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/adoptions/{aid}": {
+      "get": {
+        "summary": "Obtener adopción por ID",
+        "tags": [
+          "Adoptions"
+        ],
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Adopción encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Adoption"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Adopción no encontrada"
+          }
+        }
+      }
+    },
+    "/api/adoptions/{uid}/{pid}": {
+      "post": {
+        "summary": "Crear una adopción",
+        "tags": [
+          "Adoptions"
+        ],
+        "parameters": [
+          {
+            "name": "uid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID del usuario"
+          },
+          {
+            "name": "pid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de la mascota"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Adopción creada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Adoption"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "684b03acb6ebc122f2333677"
+          },
+          "first_name": {
+            "type": "string",
+            "example": "Alda"
+          },
+          "last_name": {
+            "type": "string",
+            "example": "Jenkins"
+          },
+          "email": {
+            "type": "string",
+            "example": "Merle83@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "$2b$10$/HVxPGCjlIksDzm.nsdsROvUm4BX7oK8bFLP1mC.35dfYj1e4H3Zy"
+          },
+          "role": {
+            "type": "string",
+            "example": "user"
+          },
+          "pets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "example": "684b03acb6ebc122f2333675"
+                }
+              }
+            }
+          },
+          "__v": {
+            "type": "integer",
+            "example": 0
+          }
+        }
+      },
+      "Adoption": {
+        "type": "object",
+        "properties": {
+          "owner": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID del usuario que adopta",
+            "example": "64faeb07c9f8a4a6b1f8a9e3"
+          },
+          "pet": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID de la mascota adoptada",
+            "example": "64faeb07c9f8a4a6b1f8a9e2"
+          }
+        },
+        "required": [
+          "owner",
+          "pet"
+        ]
+      },
+      "Pet": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Nombre de la mascota",
+            "example": "Firulais"
+          },
+          "specie": {
+            "type": "string",
+            "description": "Especie de la mascota",
+            "example": "Perro"
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Fecha de nacimiento"
+          },
+          "adopted": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indica si fue adoptado"
+          },
+          "owner": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "ID del dueño, si fue adoptado",
+            "example": "64faeb07c9f8a4a6b1f8a9e3"
+          },
+          "image": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL de la imagen de la mascota",
+            "example": "https://i.imgur.com/abc123.png"
+          }
+        },
+        "required": [
+          "name",
+          "specie"
+        ]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "algo no salio como debia"
+          },
+          "error": {
+            "type": "string",
+            "example": "Failed running"
+          }
+        }
+      }
+    }
+  }
+}
