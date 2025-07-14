@@ -235,22 +235,51 @@ describe("POST /api/adoptions", () => {
 
         const resMockPet = (await mockPet.json())[0];
 
-/*         expect(resModifiedUser).toEqual(
+        const adoptionTest = await fetch(`http://localhost:${process.env.PORT}/api/adoptions/${resMockUser._id}/${resMockPet._id}`, {
+            method: "post",
+            headers: { "Content-Type": "application/json" }
+        });
+
+        const resAdoptionTest = await adoptionTest.json()
+
+        expect(resAdoptionTest).toEqual(
             expect.objectContaining({
                 status: "success",
-                message: "User updated"
+                message: "Pet adopted"
             })
         );
 
-        const clear = await request(app).delete(`/api/users/${resMockUser._id}`)
 
-        expect(clear.statusCode).toBe(200);
-        expect(clear.body).toEqual(
+
+        const clearUser = await request(app).delete(`/api/users/${resMockUser._id}`)
+
+        expect(clearUser.statusCode).toBe(200);
+        expect(clearUser.body).toEqual(
             expect.objectContaining({
                 status: "success",
                 message: "User deleted"
             })
-        ); */
+        );
+
+        const clearPet = await request(app).delete(`/api/pets/${resMockPet._id}`)
+
+        expect(clearPet.statusCode).toBe(200);
+        expect(clearPet.body).toEqual(
+            expect.objectContaining({
+                status: "success",
+                message: "pet deleted"
+            })
+        );
+
+        const clearAdoption = await request(app).delete(`/api/adoptions/${resAdoptionTest.payload._id}`)
+
+        expect(clearAdoption.statusCode).toBe(200);
+        expect(clearAdoption.body).toEqual(
+            expect.objectContaining({
+                status: "success",
+                message: "adoption delete"
+            })
+        );
 
     });
 
